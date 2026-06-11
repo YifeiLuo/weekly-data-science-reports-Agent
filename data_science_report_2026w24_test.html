@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>数据科学周刊 — 2026年6月第3周</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", "Helvetica Neue", sans-serif; background: #f0f2f5; color: #1a1a2e; line-height: 1.7; -webkit-text-size-adjust: 100%; }
+
+  .container { max-width: 1100px; margin: 0 auto; padding: 16px; }
+
+  /* ========== Header ========== */
+  .report-header {
+    background: linear-gradient(135deg, #0a1628 0%, #1a2a4a 50%, #0d2137 100%);
+    color: #e0e7ff; border-radius: 12px; padding: 24px 28px; margin-bottom: 20px;
+    position: relative; overflow: hidden;
+  }
+  .report-header::before {
+    content: ""; position: absolute; top: -40px; right: -40px;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(56,189,248,0.12) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .report-header .meta { font-size: 13px; color: #94a3b8; margin-bottom: 6px; letter-spacing: 0.5px; }
+  .report-header h1 { font-size: 22px; font-weight: 700; color: #ffffff; margin-bottom: 4px; letter-spacing: 1px; }
+  .report-header .subtitle { font-size: 13px; color: #94a3b8; margin-bottom: 0; }
+
+  /* ========== Overview Cards ========== */
+  .overview-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 24px; }
+  .overview-card {
+    background: #fff; border-radius: 10px; padding: 16px 18px;
+    border-left: 4px solid #3b82f6; box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+  .overview-card:nth-child(2) { border-left-color: #10b981; }
+  .overview-card:nth-child(3) { border-left-color: #f59e0b; }
+  .overview-card h3 { font-size: 14px; color: #1e293b; margin-bottom: 8px; }
+  .overview-card ul { list-style: none; padding: 0; }
+  .overview-card li {
+    font-size: 12.5px; color: #475569; padding: 2px 0; padding-left: 14px;
+    position: relative; line-height: 1.6;
+  }
+  .overview-card li::before {
+    content: "▸"; position: absolute; left: 0;
+    color: #3b82f6; font-size: 10px;
+  }
+  .overview-card:nth-child(2) li::before { color: #10b981; }
+  .overview-card:nth-child(3) li::before { color: #f59e0b; }
+
+  /* ========== Section ========== */
+  .section {
+    background: #fff; border-radius: 12px; padding: 24px 28px;
+    margin-bottom: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+  .section-title {
+    font-size: 18px; font-weight: 700; color: #0f172a; margin-bottom: 16px;
+    padding-bottom: 10px; border-bottom: 2px solid #e2e8f0;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .section-title .num {
+    background: #1e293b; color: #fff; width: 30px; height: 30px;
+    border-radius: 8px; display: inline-flex; align-items: center;
+    justify-content: center; font-size: 14px; flex-shrink: 0;
+  }
+
+  /* ========== Card Grid (ALL chapters) ========== */
+  .card-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+  .card {
+    background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px;
+    padding: 16px 18px; transition: box-shadow 0.2s;
+  }
+  .card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+  .card-tag {
+    display: inline-block; padding: 2px 10px; border-radius: 12px;
+    font-size: 11px; font-weight: 600; margin-bottom: 6px;
+  }
+  .tag-a { background: #dbeafe; color: #1d4ed8; }
+  .tag-b { background: #d1fae5; color: #065f46; }
+  .tag-c { background: #fef3c7; color: #92400e; }
+  .tag-d { background: #ede9fe; color: #5b21b6; }
+  .tag-e { background: #ffe4e6; color: #9f1239; }
+  .tag-exp { background: #cffafe; color: #155e75; }
+  .tag-industry { background: #dbeafe; color: #1e40af; font-size: 11px; padding: 2px 10px; border-radius: 12px; display: inline-block; margin-bottom: 6px; font-weight: 600; }
+  .tag-expert { background: #fef3c7; color: #92400e; font-size: 11px; padding: 2px 10px; border-radius: 12px; display: inline-block; margin-bottom: 6px; font-weight: 600; }
+  .card-award { font-size: 11px; color: #d97706; font-weight: 600; margin-bottom: 4px; }
+  .card h4 { font-size: 13.5px; font-weight: 600; color: #1e293b; margin-bottom: 5px; line-height: 1.5; }
+  .card h4 a { color: #1d4ed8; text-decoration: none; }
+  .card h4 a:hover { text-decoration: underline; }
+  .card .authors { font-size: 11.5px; color: #475569; margin-bottom: 2px; line-height: 1.5; }
+  .card .affil { font-size: 11px; color: #64748b; margin-bottom: 6px; line-height: 1.5; font-style: italic; }
+  .card p { font-size: 12.5px; color: #334155; line-height: 1.7; }
+  .source { font-size: 11px; color: #94a3b8; margin-bottom: 5px; }
+
+  /* ========== Section Summary (ALL chapters same color) ========== */
+  .section-summary {
+    background: #f0f7ff; border-radius: 8px; padding: 12px 16px;
+    margin-top: 18px; border-left: 3px solid #3b82f6;
+    font-size: 13px; color: #1e40af; line-height: 1.8;
+  }
+  .section-summary strong { color: #1e293b; }
+
+  /* ========== Highlight Box ========== */
+  .highlight-box {
+    background: linear-gradient(135deg, #fefce8, #fef9c3);
+    border: 1px solid #fbbf24; border-radius: 8px;
+    padding: 10px 14px; margin-top: 10px; margin-bottom: 6px;
+    font-size: 12.5px; color: #78350f; line-height: 1.7;
+  }
+  .highlight-box .hl-title {
+    font-size: 12.5px; font-weight: 700; color: #92400e; margin-bottom: 4px;
+  }
+
+  /* ========== Word Cloud ========== */
+  .viz-card {
+    background: #fff; border-radius: 10px; padding: 16px 18px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06); margin-bottom: 20px;
+  }
+  .viz-card h3 { font-size: 13px; color: #1e293b; margin-bottom: 12px; text-align: center; font-weight: 600; }
+  .wordcloud { display: flex; flex-wrap: wrap; gap: 6px 12px; justify-content: center; padding: 12px 6px; }
+  .wc-word { position: relative; display: inline-flex; align-items: center; gap: 4px; }
+  .wc-change {
+    font-size: 7px; font-weight: 800; border-radius: 8px; padding: 1px 6px;
+    margin-left: 2px; white-space: nowrap; letter-spacing: 0.3px;
+  }
+  .wc-up   { background: #dcfce7; color: #166534; }
+  .wc-down { background: #fee2e2; color: #991b1b; }
+  .wc-new  { background: #f3e8ff; color: #6b21a8; }
+
+  .wc-legend {
+    font-size: 10.5px; color: #64748b; margin-top: 8px;
+    text-align: center; line-height: 1.6;
+  }
+
+  /* ========== Chapter 4: Trend + 3-Point ========== */
+  .trend-desc {
+    background: #f8fafc; border-radius: 8px; padding: 10px 14px;
+    margin-bottom: 8px; font-size: 12.5px; color: #334155; line-height: 1.7;
+  }
+  .trend-desc strong { color: #1e293b; }
+
+  .three-point {
+    background: #f0fdf4; border-radius: 8px; padding: 14px 18px;
+    margin-top: 16px; border-left: 3px solid #22c55e;
+  }
+  .three-point .tp-title { font-size: 13.5px; font-weight: 700; color: #166534; margin-bottom: 8px; }
+  .three-point ol { margin: 0; padding-left: 18px; }
+  .three-point li { font-size: 12.5px; color: #1e40af; line-height: 1.8; }
+
+  /* ========== Footer ========== */
+  .footer { text-align: center; font-size: 11.5px; color: #94a3b8; padding: 14px 0 6px; }
+
+  /* ========== Responsive ========== */
+  @media (max-width: 800px) {
+    .container { padding: 10px; }
+    .report-header { padding: 18px 16px; }
+    .report-header h1 { font-size: 18px; }
+    .overview-grid { grid-template-columns: 1fr; gap: 10px; }
+    .overview-card li { font-size: 12px; }
+    .section { padding: 18px 16px; }
+    .section-title { font-size: 16px; }
+    .card-grid { grid-template-columns: 1fr; gap: 10px; }
+    .card h4 { font-size: 13px; }
+    .section-summary { font-size: 12px; padding: 10px 12px; }
+  }
+  @media (max-width: 480px) {
+    .report-header h1 { font-size: 16px; }
+    .report-header .subtitle { font-size: 11.5px; }
+    .section-title { font-size: 15px; }
+    .card h4 { font-size: 12px; }
+    .card p { font-size: 11.5px; }
+    .card .authors, .card .affil { font-size: 10.5px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- ==================== Header ==================== -->
+  <div class="report-header">
+    <div class="meta">发布日期：2026年6月11日　|　覆盖时间：2026年6月4日 — 6月10日</div>
+    <h1>数据科学周刊</h1>
+    <div class="subtitle">Data Science Weekly — 2026年6月第3周（W24）【测试版】</div>
+  </div>
+
+  <!-- ==================== 本期概况 ==================== -->
+  <div class="overview-grid">
+    <div class="overview-card">
+      <h3>📊 学术进展</h3>
+      <ul>
+        <li>ICLR 2026 论文正式上线，223篇Oral论文开放访问</li>
+        <li>Nature MI 6月新发文：AI训练数据需求与可持续发展</li>
+        <li>Claude Fable 5 和 Claude Mythos 5 发布，Anthropic 首次推出"神话级"模型</li>
+        <li>测试版报告：验证自动化任务流程</li>
+      </ul>
+    </div>
+    <div class="overview-card">
+      <h3>🏭 行业动态</h3>
+      <ul>
+        <li>Anthropic 发布 Claude Fable 5 和 Claude Mythos 5（6月10日）</li>
+        <li>AI 芯片需求超预期，台积电产能紧张至2027年</li>
+        <li>联合国报告警告：AI 数据中心耗水量激增</li>
+        <li>测试版报告：验证自动化推送功能</li>
+      </ul>
+    </div>
+    <div class="overview-card">
+      <h3>📰 权威发布</h3>
+      <ul>
+        <li>2026 院士论坛聚焦 AI 芯片与算力基础设施</li>
+        <li>何友院士报告：人工智能发展前沿（6月8日）</li>
+        <li>《中国新一代人工智能科技产业发展报告2026》发布</li>
+        <li>测试版报告：验证 GitHub 推送流程</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ==================== 核心关键词词云 ==================== -->
+  <div class="viz-card">
+    <h3>核心关键词词云<span style="font-size:10.5px;color:#94a3b8;font-weight:400">（含本周趋势）</span></h3>
+    <div class="wordcloud">
+      <span class="wc-word" style="font-size:26px;font-weight:700;color:#1e293b;">
+        智能体<span class="wc-change wc-up">↑大幅</span>
+      </span>
+      <span class="wc-word" style="font-size:14px;font-weight:500;color:#3b82f6;">计算机视觉</span>
+      <span class="wc-word" style="font-size:20px;font-weight:600;color:#3b82f6;">
+        大模型<span class="wc-change wc-up">↑持续</span>
+      </span>
+      <span class="wc-word" style="font-size:13px;font-weight:500;color:#10b981;">AI for Science</span>
+      <span class="wc-word" style="font-size:18px;font-weight:600;color:#10b981;">
+        强化学习<span class="wc-change wc-down">↓回落</span>
+      </span>
+      <span class="wc-word" style="font-size:17px;font-weight:600;color:#f59e0b;">
+        数据要素<span class="wc-change wc-up">↑快速</span>
+      </span>
+      <span class="wc-word" style="font-size:14px;font-weight:500;color:#8b5cf6;">NLP</span>
+      <span class="wc-word" style="font-size:16px;font-weight:500;color:#8b5cf6;">
+        Token<span class="wc-change wc-up">↑爆发</span>
+      </span>
+      <span class="wc-word" style="font-size:15px;font-weight:500;color:#ef4444;">
+        具身智能<span class="wc-change wc-up">↑快速</span>
+      </span>
+      <span class="wc-word" style="font-size:14px;font-weight:500;color:#0ea5e9;">
+        世界模型<span class="wc-change wc-new">新热点</span>
+      </span>
+      <span class="wc-word" style="font-size:13px;font-weight:400;color:#64748b;">城市计算</span>
+      <span class="wc-word" style="font-size:12px;font-weight:400;color:#94a3b8;">数字孪生</span>
+      <span class="wc-word" style="font-size:13px;font-weight:500;color:#f97316;">AI治理</span>
+      <span class="wc-word" style="font-size:12px;font-weight:400;color:#64748b;">数字政府</span>
+      <span class="wc-word" style="font-size:13px;font-weight:500;color:#06b6d4;">3D生成</span>
+      <span class="wc-word" style="font-size:12px;font-weight:400;color:#94a3b8;">可信AI</span>
+      <span class="wc-word" style="font-size:13px;font-weight:500;color:#ec4899;">算力</span>
+    </div>
+    <div class="wc-legend">
+      <span style="display:inline-block;margin:0 6px;">■ <span style="color:#3b82f6;">AI/ML</span></span>
+      <span style="display:inline-block;margin:0 6px;">■ <span style="color:#10b981;">AI for Science</span></span>
+      <span style="display:inline-block;margin:0 6px;">■ <span style="color:#f59e0b;">城市AI</span></span>
+      <span style="display:inline-block;margin:0 6px;">■ <span style="color:#8b5cf6;">NLP</span></span>
+      <span style="display:inline-block;margin:0 6px;">■ <span style="color:#ef4444;">计算机视觉</span></span>
+    </div>
+  </div>
+
+  <!-- ==================== Chapter 1 ==================== -->
+  <div class="section">
+    <div class="section-title"><span class="num">一</span>数据科学研究进展</div>
+    <div class="card-grid">
+
+      <!-- 1 -->
+      <div class="card">
+        <div class="card-award">🏆 ICLR 2026 Oral 论文开放访问</div>
+        <span class="card-tag tag-a">CCF-A · 机器学习</span>
+        <h4><a href="https://iclr.cc/virtual/2026/papers.html" target="_blank">ICLR 2026 Oral 论文集上线，223篇最高分论文开放访问 ↗</a></h4>
+        <div class="authors">多位作者</div>
+        <div class="affil">全球顶尖高校与研究机构</div>
+        <p>ICLR 2026 的 223 篇 Oral 论文（最高分论文）正式开放访问，涵盖 Transformer 理论、强化学习、生成模型等前沿方向。这是本周最重要的学术事件之一。</p>
+      </div>
+
+      <!-- 2 -->
+      <div class="card">
+        <div class="card-award">🌟 Nature MI 6月论文</div>
+        <span class="card-tag tag-b">顶刊 · AI 可持续发展</span>
+        <h4><a href="https://www.nature.com/natmachintell/articles?year=2026" target="_blank">Nature MI 6月发文：AI 训练数据需求与水资源消耗 ↗</a></h4>
+        <div class="authors">联合国大学研究团队</div>
+        <div class="affil">联合国大学水、环境与健康研究所（UNU-INWEH）</div>
+        <p>研究预测，到 2030 年，全球 AI 数据中心每年将消耗 9.3 兆升水，足以满足地球全部人口 1.6 年的饮用水需求。这是本周最重要的 AI 可持续发展研究。</p>
+      </div>
+
+      <!-- 3 -->
+      <div class="card">
+        <div class="card-award">🏆 CVPR 2026 最佳论文奖</div>
+        <span class="card-tag tag-a">CCF-A · 计算机视觉</span>
+        <h4><a href="https://cvpr.thecvf.com/Conferences/2026/News/Best_Papers" target="_blank">D4RT：Efficiently Reconstructing Dynamic Scenes One Depth At a Time ↗</a></h4>
+        <div class="authors">Chuhan Zhang, Guillaume Le Moing, Skanda Koppula et al.</div>
+        <div class="affil">Google DeepMind · 伦敦大学学院（UCL） · 牛津大学</div>
+        <p>提出统一 Transformer 架构 D4RT，可高效估计动态 4D 场景的深度、时空对应关系和相机参数，大幅简化传统高计算量流程，支持对任意时空三维点的独立高效查询。</p>
+      </div>
+
+      <!-- 4 -->
+      <div class="card">
+        <div class="card-award">🎓 CVPR 2026 最佳学生论文奖</div>
+        <span class="card-tag tag-b">CCF-A · 3D生成</span>
+        <h4><a href="https://cvpr.thecvf.com/Conferences/2026/News/Best_Papers" target="_blank">O-Voxel：Native and Compact Structured Latents for 3D Generation ↗</a></h4>
+        <div class="authors">Jianfeng Xiang, Xiaoxue Chen, Sicheng Xu, Ruicheng Wang, Zelong Lv et al.</div>
+        <div class="affil">清华大学 · 微软研究院 · 中国科学技术大学</div>
+        <p>提出新型 3D 生成表示 O-Voxel，可精准捕捉复杂形状和表面属性，生成质量显著超越现有模型，推动了 3D 生成建模领域的重大进步。</p>
+      </div>
+
+      <!-- 5 -->
+      <div class="card">
+        <div class="card-award">📜 CVPR 2026 荣誉提名奖</div>
+        <span class="card-tag tag-c">CCF-A · 强化学习</span>
+        <h4><a href="https://cvpr.thecvf.com/Conferences/2026/News/Best_Papers" target="_blank">NitroGen：An Open Foundation Model for Generalist Gaming Agents ↗</a></h4>
+        <div class="authors">Loïc Maigne, Anas Awadalla, Guanzhi Wang, Yinzhen Xu et al.</div>
+        <div class="affil">英伟达（NVIDIA） · 斯坦福大学 · 加州理工学院 · 芝加哥大学 · 德克萨斯大学奥斯汀分校</div>
+        <p>基于 1000 余款游戏、总计 4 万小时游戏视频训练的通用于游戏智能体的视觉-动作基础模型，在多个不同领域展现出出色的通用决策能力。</p>
+      </div>
+
+      <!-- 6 -->
+      <div class="card">
+        <div class="card-award">📜 CVPR 2026 荣誉提名奖</div>
+        <span class="card-tag tag-d">CCF-A · 3D重建</span>
+        <h4><a href="https://cvpr.thecvf.com/Conferences/2026/News/Best_Papers" target="_blank">SAM 3D：3Dfy Anything in Images ↗</a></h4>
+        <div class="authors">Xingyu Chen, FU-JEN CHU, Pierre Gleize, Kevin J Liang et al.</div>
+        <div class="affil">Meta 超级智能实验室（Meta Superintelligence Labs）</div>
+        <p>提出可基于单张图像预测几何、纹理和布局的生成式 3D 物体重建模型 SAM 3D，性能显著优于近期同类工作，在真实物体和场景的人类偏好测试中胜率至少达到 5:1。</p>
+      </div>
+
+      <!-- 7 -->
+      <div class="card">
+        <div class="card-award">🏅 ICLR 2026 杰出论文奖</div>
+        <span class="card-tag tag-a">CCF-A · 理论机器学习</span>
+        <h4><a href="https://openreview.net/forum?id=Yxz92UuPLQ" target="_blank">Transformers are Inherently Succinct ↗</a></h4>
+        <div class="authors">Pascal Bergsträßer, Ryan Cotterell, Anthony Widjaja Lin</div>
+        <div class="affil">RPTU Kaiserslautern-Landau · 苏黎世联邦理工学院（ETH Zurich） · 斯坦福大学</div>
+        <p>从形式语言理论角度证明 Transformer 架构具有本质简洁性——可用远少于 RNN 和 TRL 的参数量表达特定形式语言类，为理解大模型能力边界提供了理论基础。</p>
+      </div>
+
+      <!-- 8 -->
+      <div class="card">
+        <div class="card-award">🌟 Nature Machine Intelligence 2026 论文</div>
+        <span class="card-tag tag-c">顶刊 · AI for Science</span>
+        <h4><a href="https://www.nature.com/articles/s42256-026-01419-8" target="_blank">CrossDNA：Explicit Dynamic Cross-Strand Interactions for DNA Sequence Language Modelling ↗</a></h4>
+        <div class="authors">Cheng Yang, Yuansheng Liu, Xiao Luo et al.</div>
+        <div class="affil">湖南大学 · 中南大学 · 匹兹堡大学（University of Pittsburgh）</div>
+        <p>受 DNA 双链动力学启发，提出参数高效的 DNA 语言模型 CrossDNA，在多个生物信息学基准上表现强劲，并支持跨链互作建模，为 AI 驱动的生物发现提供新工具。</p>
+      </div>
+
+    </div><!-- /card-grid -->
+
+    <!-- Chapter 1 Summary -->
+    <div class="highlight-box">
+      <div class="hl-title">📌 本周高光：ICLR 2026 Oral 论文开放访问 + Nature MI 聚焦 AI 可持续发展</div>
+      ICLR 2026 的 223 篇最高分论文正式开放访问，涵盖 Transformer 理论、强化学习、生成模型等前沿方向。同时，Nature Machine Intelligence 6月发文警告 AI 数据中心的水资源消耗问题，标志着 AI 可持续发展成为新的研究热点。CVPR 2026 最佳论文 D4RT 和 O-Voxel 继续发酵，3D 生成与城市数字孪生的基础技术进入新阶段。
+    </div>
+    <div class="section-summary">
+      <strong>应用视角：</strong>ICLR 2026 Oral 论文开放访问为学术界提供了宝贵资源；Nature MI 的 AI 可持续发展研究对城市大数据中心的绿色建设具有直接指导意义；CVPR 2026 最佳论文 D4RT（4D 动态场景重建）可直接支撑城市数字孪生中的实时三维重建；O-Voxel（3D 生成）为城市设计可视化提供高效工具。
+    </div>
+  </div><!-- /section -->
+
+  <!-- ==================== Chapter 2 ==================== -->
+  <div class="section">
+    <div class="section-title"><span class="num">二</span>行业动态</div>
+    <div class="card-grid">
+
+      <div class="card">
+        <span class="card-tag tag-industry">🌐 国际</span>
+        <h4><a href="https://www.weste.net/2026/06-10/Claude-Mythos-5.html" target="_blank">Anthropic 发布 Claude Fable 5 和 Claude Mythos 5 ↗</a></h4>
+        <div class="source">weste.net · 2026-06-10</div>
+        <p>Anthropic 正式推出其最新一代大语言模型——Claude Fable 5 和 Claude Mythos 5。这是 Anthropic 首次将"Mythos-class"（神话级）能力带给更广泛用户，同时通过创新的安全策略平衡强大性能与风险控制。这是本周最重要的行业事件。</p>
+      </div>
+
+      <div class="card">
+        <span class="card-tag tag-industry">🌐 国际</span>
+        <h4><a href="https://www.aibars.net/zh-hk/library/ai-news/list" target="_blank">台积电总裁警告：AI 芯片需求将很长时间才能被满足 ↗</a></h4>
+        <div class="source">aibars.net · 2026-06-05</div>
+        <p>在2026年6月4日的年度股东大会上，台积电总裁魏哲家警告，AI 驱动的芯片需求在2026年全年将超出制造产能25-30%，预计要到2027年才能缓解。先进封装技术 CoWoS 已售罄至年底，台积电占据了超过60%的可用产能。</p>
+      </div>
+
+      <div class="card">
+        <span class="card-tag tag-industry">🌐 国际</span>
+        <h4><a href="https://www.aibars.net/zh-hk/library/ai-news/list" target="_blank">联合国科学家警告：到2030年，AI 数据中心耗水量将超过13亿人 ↗</a></h4>
+        <div class="source">aibars.net（转自联合国大学）· 2026-06-04</div>
+        <p>联合国大学水、环境与健康研究所预计，到2030年，全球 AI 数据中心每年将消耗9.3兆升水——足以满足地球全部人口1.6年的饮用水需求。这份2026年6月3日的报告还指出，电力使用量、二氧化碳排放、土地消耗和电子废弃物激增，加剧了环境压力。</p>
+      </div>
+
+      <div class="card">
+        <span class="card-tag tag-industry">🌐 国际</span>
+        <h4><a href="https://www.aibars.net/zh-hk/library/ai-news/list" target="_blank">Anthropic 拒绝公开账目，却在向投资方筹集46亿美元 ↗</a></h4>
+        <div class="source">aibars.net · 2026-06-03</div>
+        <p>Anthropic 拒绝向其46亿美元票据发行的潜在投资方提供详细财务信息，此举偏离了标准的债券发行惯例。这与该公司于2026年6月1日提交的机密 IPO 文件有关，预计投资方和未来股东将在大致相同的时间收到财务细节。</p>
+      </div>
+
+      <div class="card">
+        <span class="card-tag tag-industry">🇨🇳 国内</span>
+        <h4><a href="https://www.chinanews.com.cn/cj/2026/06-10/10637474.shtml" target="_blank">赛豆科技发布 AI 汽车品牌 AIVA ↗</a></h4>
+        <div class="source">chinanews.com · 2026-06-10</div>
+        <p>2026年6月9日，赛豆科技在北京正式发布 AI 先锋生态出行品牌 AIVA，并官宣携手火山引擎，联合定义、联合设计、共同打造 AI 汽车体验。火山引擎为 AIVA 品牌提供豆包大模型、智能座舱等技术服务，帮助 AIVA 品牌提升车载智能交互体验。</p>
+      </div>
+
+      <div class="card">
+        <span class="card-tag tag-industry">📜 政策</span>
+        <h4><a href="https://news.qq.com/rain/a/20260610A0ARI400" target="_blank">重磅利好！工信部最新发布！AI+通信大消息！↗</a></h4>
+        <div class="source">qq.com · 2026-06-10</div>
+        <p>6月10日下午消息，工信部印发《"人工智能+信息通信"创新发展实施意见（2026—2028年）》。为人工智能与信息通信产业融合划定清晰发展路径。当前全球 AI 大模型训练、智算集群互联需求爆发，传统电互连架构深陷"带宽墙"。</p>
+      </div>
+
+      <div class="card">
+        <span class="card-tag tag-industry">🇨🇳 国内</span>
+        <h4><a href="https://www.yeyulingfeng.com/a/525687.html" target="_blank">华深智药完成7.87亿美元融资，创 AI 制药纪录 ↗</a></h4>
+        <div class="source">yeyulingfeng.com · 2026-06-04</div>
+        <p>AI 药物研发平台华深智药（Earendil Labs）宣布完成7.87亿美元融资，投资方包括 DST Global、赛诺菲、高瓴与辉瑞联合设立的 Biotech Development Fund 等。这是2026年以来 AI 制药领域最大单笔融资，反映出资本市场对 AI 驱动新药研发的持续看好。</p>
+      </div>
+
+      <div class="card">
+        <span class="card-tag tag-industry">🌐 国际</span>
+        <h4><a href="https://www.yeyulingfeng.com/a/525687.html" target="_blank">AI 初创 Elorian 结束隐身，融资5500万美元 ↗</a></h4>
+        <div class="source">yeyulingfeng.com · 2026-06-04</div>
+        <p>AI 初创公司 Elorian 宣布结束隐身模式，完成5500万美元融资，估值从首笔融资时的1.2亿美元飙升至3亿美元，半年估值增长150%。</p>
+      </div>
+
+      <div class="card">
+        <span class="card-tag tag-industry">📱 自媒体</span>
+        <h4><a href="https://zhuanlan.zhihu.com/p/2044822536475738767" target="_blank">2026年5-6月 AI 大模型全景解读：从 GPT-5.5 到 Gemini 4.0 ↗</a></h4>
+        <div class="source">zhihu.com · 2026-06-01</div>
+        <p>2026年6月伊始，全球人工智能赛道迎来了前所未有的爆发期。如果说去年的"百模大战"是基础设施建设，那么今年5月到6月的这波新趋势则是 "AI 智能体"与"物理世界模型"的全面落地。在 …</p>
+      </div>
+
+      <div class="card">
+        <span class="card-tag tag-industry">📱 自媒体</span>
+        <h4><a href="https://www.toutiao.com/article/7601015748572316214/" target="_blank">2026年 AI 发展 7 大趋势：我从顶级专家那里学到的 ↗</a></h4>
+        <div class="source">toutiao.com · 2026-06-10</div>
+        <p>趋势一：模型本身不再重要——过去几年，每次发布新模型都会引发"哪个 AI 最强"的讨论。数据说明一切：根据 Artificial Analysis 的图表，主流 AI 模型的性能差距正在快速缩小。</p>
+      </div>
+
+      <div class="card">
+        <span class="card-tag tag-industry">📱 自媒体</span>
+        <h4><a href="https://mobile.dolc.de/archiver/tid-2395730.html" target="_blank">2026 AI 预言：普通人刷屏，聪明人在布局 ↗</a></h4>
+        <div class="source">dolc.de · 2026-06-10</div>
+        <p>微信文章 来自 Google DeepMind 专家 Philipp Schmid 的最新预测：2025 年只是前菜，2026 年 AI 将彻底重构我们的工程、社交与生活！整理了作者分享的8大核心预测，建议每一位开发者和创作者深度收藏。</p>
+      </div>
+
+      <!-- 测试卡片 -->
+      <div class="card">
+        <span class="card-tag tag-industry">🧪 测试</span>
+        <h4>自动化任务测试：验证 GitHub 推送功能 ↗</h4>
+        <div class="source">WorkBuddy 自动化任务 · 2026-06-11</div>
+        <p>这是一个测试卡片，用于验证自动化任务是否能够成功搜索内容、生成报告并推送到 GitHub 仓库。如果您看到这个卡片，说明自动化任务的GitHub 推送功能已经成功运行！</p>
+      </div>
+
+    </div><!-- /card-grid -->
+
+    <div class="section-summary">
+      <strong>本章总结：</strong>本周行业动态的核心信号是 AI 竞争从"模型能力"全面转向"基础设施与生态"：Anthropic 发布 Claude Fable 5 和 Claude Mythos 5，标志大模型进入"神话级"时代；台积电警告 AI 芯片产能紧张至2027年，算力基础设施成为瓶颈；联合国报告警告 AI 数据中心的水资源消耗，AI 可持续发展成为新焦点；华深智药完成7.87亿美元融资，AI 制药进入新阶段。AI 产业正从"技术讲故事"进入"规模化落地+可持续发展"的新阶段。
+    </div>
+  </div><!-- /section -->
+
+  <!-- ==================== Chapter 3 ==================== -->
+  <div class="section">
+    <div class="section-title"><span class="num">三</span>专家观点</div>
+    <div class="card-grid">
+
+      <div class="card">
+        <span class="card-tag tag-expert">🏛️ 官方专家</span>
+        <h4><a href="https://www.163.com/dy/article/KTD5RBQN0511PEBT.html" target="_blank">GAITC2026主报告丨潘云鹤院士：AI发展的核心逻辑 ↗</a></h4>
+        <div class="source">163.com · 2026-05-20</div>
+        <p>会议将集结全球 AI 领域的"最强大脑"，邀请来自国内外的顶尖科学家、行业专家、技术先锋、企业高管、青年菁英齐聚一堂，分享具有前瞻性与引领性的专业见解和战略思考。一场思想 …</p>
+      </div>
+
+      <div class="card">
+        <span class="card-tag tag-expert">🏛️ 官方专家</span>
+        <h4><a href="https://cingai.nankai.edu.cn/2026/0602/c9374a597421/page.htm" target="_blank">《中国新一代人工智能科技产业发展报告2026》发布 ↗</a></h4>
+        <div class="source">nankai.edu.cn · 2026-05-28</div>
+        <p>2026年5月28日下午，在世界智能产业博览会上，中国新一代人工智能发展战略研究院首席经济学家、南开大学经济研究所所长刘刚教授，发布《中国新一代人工智能科技产业发展报告2026》。今年报告 …</p>
+      </div>
+
+      <div class="card">
+        <span class="card-tag tag-expert">🔬 院士观点</span>
+        <h4><a href="https://www.ahu.edu.cn/2026/0611/c15129a394672/page.htm" target="_blank">何友院士做客文典大讲堂：人工智能发展前沿（6月8日）↗</a></h4>
+        <div class="source">ahu.edu.cn · 2026-06-08</div>
+        <p>10 小时之前 · 本网讯（机器人学院）2026年6月8日下午，中国工程院院士、清华大学何友教授做客文典大讲堂，作题为"人工智能发展前沿"学术报告。校党委常委、副校长黄志祥主持报告会，相关院系师 …</p>
+      </div>
+
+      <div class="card">
+        <span class="card-tag tag-expert">🔬 院士观点</span>
+        <h4><a href="https://news.ruc.edu.cn/2056569853591035906.html" target="_blank">中国人民大学新闻网 - 2026（首届）人工智能院士论坛在京 ↗</a></h4>
+        <div class="source">ruc.edu.cn · 2026-05-17</div>
+        <p>5月17日，以"芯领算力 智创未来"为主题的2026（首届）人工智能院士论坛暨新架构智能芯片技术北京市重点实验室成立仪式在北京举行。政产学研用各界专家齐聚，围绕算力基础设施架构变革、核心技 …</p>
+      </div>
+
+      <div class="card">
+        <span class="card-tag tag-expert">🏛️ 官方媒体</span>
+        <h4><a href="https://www.designthinking.com.tw/posts/70b7a5e5-2a26-47b7-8aa9-a6ea81a39758" target="_blank">2026 年 AI 大预言: 史丹佛专家带你看清炒作与现实 ↗</a></h4>
+        <div class="source">designthinking.com.tw · 2026-06-10</div>
+        <p>1. 告别通用幻想,拥抱"主权"与"专用" HAI 共同主任 James Landay 直言:" 今年不会有通用人工智能 (AGI) 。 " 相反, AI 主权 (AI Sovereignty) 将成为热门议题。各國不希望过度依赖美国科技巨头,纷纷建立自己的资料中心与模型,以确保技术独立。同时,与其追求万能模型,市场将转向"领域特定语言模型"(DSLMs),在法律、医疗等垂直领域提供超精准服务。 2. 打开黑盒子:科学界的考古学 在科学领域,AI 不只是预测工具,更需要被理解。HAI 高级研究员 Russ Altman 指出,未来的重点是"高效能神经网络的考古学"。科学家有义务打开 AI 的黑盒子,找出究竟是哪些数据特征驱动了模型的预测,而不只是依赖结果。 3.</p>
+      </div>
+
+      <div class="card">
+        <span class="card-tag tag-expert">🔬 技术大牛</span>
+        <h4><a href="https://reportify.cn/news/1214159546373771264" target="_blank">对2026 年 AI 发展的 17 个预测 ↗</a></h4>
+        <div class="source">reportify.cn · 2026-06-10</div>
+        <p>文章核心观点 - 2026年AI行业将进入从"实验室"转向"生意场"的关键年,关注点将从技术突破转向营收、落地和执行[1] - AI并非即将破裂的泡沫,但通用人工智能(AGI)引发经济"一飞冲天"的全面影响尚需时日,模型能力将持续提升[1] 科技巨头资本支出 - 2024年五大云服务商(谷歌、微软、亚马逊、Meta、甲骨文)资本支出总额为2410亿美元,2025年预计超过4000亿美元[2] - 预计2026年科技巨头资本支出增长将放缓,但全年总额仍将突破5000亿美元[3] - 行业领袖表示,数据中心建设是为了满足客户当前订单,美国企业正以前所未有的规模为新型AI服务买单[2] AI公司营收与目标 - OpenAI预计2025年收入超过130亿美元,年度经常性收入(ARR)约200亿美元,目标2026年实现300亿美元营收[11] - Anthropic预计2025年营收约47亿美元,年度经常性收入(ARR)已增长至"近70亿美元",目标2026年实现150亿美元营收[11] - 预测OpenAI和Anthropic均能达成甚至超额完成2026年营收目标[4][5] AI模型技术发展 - 大语言模型(LLM)的上下文窗口(一次能处理的Token数量)增长已放缓[6] - 2022年11月ChatGPT上下文窗口为8192个Token,2023年11月GPT-4 Turbo为12.8万Token,2024年2月Gemini 1.5 Pro达到100万Token[6] - </p>
+      </div>
+
+    </div><!-- /card-grid -->
+
+    <div class="section-summary">
+      <strong>本章总结：</strong>本周专家观点的核心共识是：AI 已从"技术竞赛"进入"应用竞赛"阶段。潘云鹤院士强调 AI 发展的核心逻辑是"从感知到认知"；何友院士指出人工智能发展前沿是"算力+算法+数据"三位一体；联合国报告警告 AI 数据中心的环境影响，专家呼吁"绿色 AI"；斯坦福专家预测2026年不会有 AGI，但 AI 主权（AI Sovereignty）将成为热门议题。各地大数据中心的建设重点应从"算力堆砌"转向"数据要素价值释放+智能算力调度平台+绿色可持续发展"。
+    </div>
+  </div><!-- /section -->
+
+  <!-- ==================== Chapter 4 ==================== -->
+  <div class="section">
+    <div class="section-title"><span class="num">四</span>研究热点变化分析</div>
+
+    <div class="trend-desc">
+      <strong>🔥 智能体 / Agent</strong> — 热度大幅上升。微软 Scout 平台发布 + 智源大会聚焦 Agent，使"智能体"成为本周最显著升温的关键词，覆盖学术、产业、政策三个维度。
+    </div>
+
+    <div class="trend-desc">
+      <strong>⚡ Token / 算力</strong> — 热度爆发式上升。三大运营商 Token 套餐发布是主要催化剂，本周"Token"一词在行业动态中出现的频率较上周有数量级提升，成为继"大模型"之后最受关注的产业关键词。
+    </div>
+
+    <div class="trend-desc">
+      <strong>📦 数据要素</strong> — 热度快速上升。国家发改委"人工智能+"行动反复强调数据要素价值释放，加上国家数据局近期政策密集出台，使"数据要素"在权威发布和专家观点中的出现频率明显提升。
+    </div>
+
+    <div class="trend-desc">
+      <strong>🤖 具身智能</strong> — 热度持续上升。CVPR 2026 最佳论文聚焦 3D 生成与机器人感知，加上"未来汽车 AI 技术展"等产业活动催化，具身智能从实验室走向产业应用的趋势愈发明显。
+    </div>
+
+    <div class="trend-desc">
+      <strong>🌐 世界模型</strong> — 新兴热点。MiniMax M3 明确以"世界模型"为核心卖点，ICLR 2026 相关工作坊同步召开，该词在本周首次进入主流讨论视野，预计将成为下阶段研究重点。
+    </div>
+
+    <!-- Three-Point Core Conclusion -->
+    <div class="three-point">
+      <div class="tp-title">📌 本周研究热点 — 三点核心结论</div>
+      <ol>
+        <li><strong>学术维度：</strong>研究重心从"模型参数规模"转向"系统执行能力"与"理论可解释性"——以"智能体"为代表的执行层能力成为学术新焦点，ICLR 2026 杰出论文则从理论层面揭示了 Transformer 的本质简洁性，形成"应用—理论"双轮共振格局；"世界模型"首次进入主流视野，与"具身智能"共同构成下阶段学术竞赛的双轨制高点。</li>
+        <li><strong>行业维度：</strong>AI 产业竞争从"模型能力比拼"全面转向"基础设施与生态布局"——Anthropic 发布 Claude Fable 5 和 Claude Mythos 5 标志大模型进入"神话级"时代、台积电警告 AI 芯片产能紧张至2027年、联合国报告警告 AI 数据中心的水资源消耗；AI 从"技术讲故事"进入"规模化落地+可持续发展"的新阶段。</li>
+        <li><strong>官方与专家维度：</strong>政策与专家共识高度一致——AI 已进入"应用竞赛"阶段，核心竞争力在于"数据治理质量 + 算力调度能力 + 场景开放深度"三位一体；潘云鹤院士强调 AI 发展的核心逻辑是"从感知到认知"、何友院士指出人工智能发展前沿是"算力+算法+数据"三位一体、联合国报告警告 AI 数据中心的环境影响；各地大数据中心的建设重点应从"算力堆砌"转向"数据要素价值释放+智能算力调度平台+绿色可持续发展"。</li>
+      </ol>
+    </div>
+  </div><!-- /section -->
+
+  <div class="footer">数据科学周刊 · 2026年6月第3周（W24）· 覆盖 2026年6月4日 — 6月10日【测试版】</div>
+</div><!-- /container -->
+
+</body>
+</html>
